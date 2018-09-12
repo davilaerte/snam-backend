@@ -59,4 +59,4 @@ app.put('/user', (req, res) => res.send('Got a PUT request'));
 
 app.delete('/user', (req, res) => res.send('Got a DELETE request'));
 
-app.listen(port, () => console.log('App listening on port ' + port + '!'));
+app.listen(port, () => console.log(`App listening on port ${port}!`));
