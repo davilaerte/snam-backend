@@ -18,8 +18,11 @@
   "homepage": "https://github.com/davilaerte/snam-backend#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "swagger-express": "^1.0.5",
+    "swagger-ui-express": "^4.0.1"
   },
   "devDependencies": {
     "supertest": "^3.2.0"

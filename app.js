@@ -1,14 +1,40 @@
+/**
+ * Application server.
+ * Author: Davi Laerte
+ */
+
 const express = require('express');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const swagger = require('swagger-express');
+const cors = require('cors');
 
 const app = express();
-const port = 8000;
+const port = 3000;
 
 module.exports = app;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
+
+app.use(morgan('tiny'));
+
+app.use(cors());
+
+app.use(
+  swagger.init(app, {
+    apiVersion: "1.0",
+    swaggerVersion: "1.0",
+    basePath: "http://localhost:3000",
+    swaggerURL: "/docs/api",
+    swaggerJSON: "/api-docs.json",
+    swaggerUI: "./public/swagger/",
+    apis: ['./api.js']
+  })
+);
+
+app.use("/static", express.static('./static'));
 
 app.get('/', (req, res) => {
   res.status(200).json({ users: [{ nome: 'Davi', senha: '1234' }, { nome: 'Lucas', senha: '1334' }] });

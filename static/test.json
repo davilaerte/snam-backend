@@ -1,0 +1,3 @@
+{
+  "msg": "This is a example of file that can be served in a static way! To see it, go to your browser in http://localhost:3000/static/example.json :)"
+}
