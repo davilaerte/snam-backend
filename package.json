@@ -17,10 +17,14 @@
   },
   "homepage": "https://github.com/davilaerte/snam-backend#readme",
   "dependencies": {
+    "bcrypt": "^3.0.1",
     "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
     "memory-cache": "^0.2.0",
+    "mongoose": "^5.3.1",
     "morgan": "^1.9.0",
     "swagger-express": "^1.0.5",
     "swagger-ui-express": "^4.0.1"

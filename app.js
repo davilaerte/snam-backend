@@ -5,10 +5,12 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser')
 const morgan = require('morgan');
 const swagger = require('swagger-express');
 const cors = require('cors');
-const userRouter = require('./controllers/userController');
+const userRouter = require('./user/userController');
+const authRouter = require('./auth/authController');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,13 +21,10 @@ if (environment !== 'production') {
 }
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(bodyParser.json());
-
+app.use(cookieParser())
 app.use(morgan('dev'));
-
 app.use(cors());
-
 app.use(
   swagger.init(app, {
     apiVersion: '1.0',
@@ -34,13 +33,15 @@ app.use(
     swaggerURL: '/docs/api',
     swaggerJSON: '/api-docs.json',
     swaggerUI: './public/swagger/',
-    apis: ['./controllers/userController.js']
+    apis: ['./user/userController.js']
   })
 );
 
 app.use('/static', express.static('./static'));
 
-app.use('/user', userRouter);
+// Não modificar a ordem em que as rotas foram adicionadas, manter as rotas abertas primeiro (caso seja o mesmo recurso)
+app.use('/auth', authRouter);
+app.use('/user', userRouter.openRouter, userRouter.authRouter);
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));
 
