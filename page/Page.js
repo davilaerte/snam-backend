@@ -18,6 +18,10 @@ const PageSchema = new mongoose.Schema({
     type: [Post],
     default: []
   },
+  like: {
+    type: Number,
+    default: 0
+  },
   createAt: {
     type: Date,
     default: Date.now,

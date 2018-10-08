@@ -13,9 +13,13 @@ const DescriptionSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  likes: {
+    type: Number,
+    default: 0
+  },
   createAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   }
 });
 
