@@ -5,7 +5,7 @@
  */
 
 const express = require('express');
-const User = require('./User');
+const userRepository = require('./userRepository');
 const util = require('../util/util');
 const authMiddleware = require('../middlewares/authMiddleware');
 const authRouter = express.Router();
@@ -28,12 +28,12 @@ authRouter.use(authMiddleware);
 openRouter.post('/', async (req, res) => {
   const { email } = req.body;
 
-  if (await User.findOne({ email })) {
+  if (await userRepository.findByEmail(email)) {
     return res.status(400).json({ error: 'Usuario ja cadastrado' });
   }
 
   try {
-    const user = await User.create(req.body);
+    const user = await userRepository.create(req.body);
 
     user.password = undefined;
 
@@ -57,7 +57,7 @@ openRouter.post('/', async (req, res) => {
  */
 authRouter.get('/', async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await userRepository.findAll();
 
     return res.status(200).json(users);
   } catch (e) {
@@ -83,7 +83,7 @@ authRouter.get('/', async (req, res) => {
  */
 authRouter.get('/:id', async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await userRepository.findById(req.params.id);
 
     if (!user) return res.status(400).json({ error: 'Usuario nao cadastrado' });
 
