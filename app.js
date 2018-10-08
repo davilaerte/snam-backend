@@ -11,6 +11,8 @@ const swagger = require('swagger-express');
 const cors = require('cors');
 const userRouter = require('./user/userController');
 const authRouter = require('./auth/authController');
+const pageRouter = require('./page/pageController');
+const descriptionRouter = require('./description/descriptionController');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -42,6 +44,8 @@ app.use('/static', express.static('./static'));
 // Não modificar a ordem em que as rotas foram adicionadas, manter as rotas abertas primeiro (caso seja o mesmo recurso)
 app.use('/auth', authRouter);
 app.use('/user', userRouter.openRouter, userRouter.authRouter);
+app.use('/page', pageRouter);
+app.use('/description', descriptionRouter);
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));
 
