@@ -1,5 +1,5 @@
 const express = require('express');
-const Description = require('./Description');
+const descriptionRepository = require('./descriptionRepository');
 const notificationRepository = require('../notification/notificationRepository');
 const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
   try {
     req.body.idUserAdm = userId;
 
-    const description = await Description.create(req.body);
+    const description = await descriptionRepository.create(req.body);
 
     await createDescriptionNotification('Create', 'Created new description!', description.id, userId);
 
@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const descriptions = await Description.find({});
+    const descriptions = await descriptionRepository.findAll();
 
     return res.status(200).json(descriptions);
   } catch (e) {
@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const description = await Description.findById(req.params.id);
+    const description = await descriptionRepository.findById(req.params.id);
 
     return res.status(200).json(description);
   } catch (e) {
