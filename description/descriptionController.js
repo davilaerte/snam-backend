@@ -42,8 +42,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-function createDescriptionNotification(type, text, descriptionId, userId) {
-  return notificationRepository.create(type, 'Description', text, '/description/' + descriptionId, userId);
+function createDescriptionNotification(type, text, resource, userId) {
+  return notificationRepository.create(type, 'Description', text, '/description/' + resource, userId);
 }
 
 module.exports = router;

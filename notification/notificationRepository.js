@@ -4,8 +4,7 @@ const notificationRepository = {};
 
 notificationRepository.create = async (type, entity, text, link, userId) => {
   const notification = new Notification({ type, entity, text, link, userId });
-  await notification.save();
-  return notification;
+  return await notification.save();
 };
 
 notificationRepository.findByUserId = async (id) => {
