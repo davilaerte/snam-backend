@@ -7,6 +7,7 @@
 const express = require('express');
 const notificationRepository = require('./notificationRepository');
 const authMiddleware = require('../middlewares/authMiddleware');
+const cache = require('../cache');
 const router = express.Router();
 
 router.use(authMiddleware);
@@ -23,7 +24,12 @@ router.use(authMiddleware);
  */
 router.get('/', async (req, res) => {
   try {
-    const notifications = await notificationRepository.findByUserId(req.userId);
+    let notifications = cache.getFromCache('Notifications ' + req.userId);
+    console.log(notifications);
+    if (!notifications) {
+      notifications = await notificationRepository.findByUserId(req.userId);
+      cache.putInCache('Notifications ' + req.userId, notifications, 10000);
+    }
 
     return res.status(200).json(notifications);
   } catch (e) {

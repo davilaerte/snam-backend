@@ -8,6 +8,7 @@ const express = require('express');
 const userRepository = require('./userRepository');
 const util = require('../util/util');
 const authMiddleware = require('../middlewares/authMiddleware');
+const cache = require('../cache');
 const authRouter = express.Router();
 const openRouter = express.Router();
 
@@ -57,7 +58,12 @@ openRouter.post('/', async (req, res) => {
  */
 authRouter.get('/', async (req, res) => {
   try {
-    const users = await userRepository.findAll();
+    let users = cache.getFromCache('Users');
+
+    if (!users) {
+      users = await userRepository.findAll();
+      cache.putInCache('Users', users, 10000);
+    }
 
     return res.status(200).json(users);
   } catch (e) {
@@ -83,9 +89,14 @@ authRouter.get('/', async (req, res) => {
  */
 authRouter.get('/:id', async (req, res) => {
   try {
-    const user = await userRepository.findById(req.params.id);
+    let user = cache.getFromCache('UserId ' + req.params.id);
 
-    if (!user) return res.status(400).json({ error: 'Usuario nao cadastrado' });
+    if (!user) {
+      user = await userRepository.findById(req.params.id);
+
+      if (!user) return res.status(400).json({ error: 'Usuario nao cadastrado' });
+      else cache.putInCache('UserId ' + req.params.id, user)
+    }
 
     return res.status(200).json(user);
   } catch (e) {

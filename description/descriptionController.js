@@ -8,6 +8,7 @@ const express = require('express');
 const descriptionRepository = require('./descriptionRepository');
 const notificationRepository = require('../notification/notificationRepository');
 const authMiddleware = require('../middlewares/authMiddleware');
+const cache = require('../cache');
 const router = express.Router();
 
 router.use(authMiddleware);
@@ -52,7 +53,12 @@ router.post('/', async (req, res) => {
  */
 router.get('/', async (req, res) => {
   try {
-    const descriptions = await descriptionRepository.findAll();
+    let descriptions = cache.getFromCache('Descriptions');
+
+    if (!descriptions) {
+      descriptions = await descriptionRepository.findAll();
+      cache.putInCache('Descriptions', descriptions, 10000);
+    }
 
     return res.status(200).json(descriptions);
   } catch (e) {
@@ -78,7 +84,14 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
   try {
-    const description = await descriptionRepository.findById(req.params.id);
+    let description = cache.getFromCache('DescriptionId ' + req.params.id);
+
+    if (!description) {
+      description = await descriptionRepository.findById(req.params.id);
+
+      if (!description) return res.status(400).json({ error: 'description nao existe' });
+      else cache.putInCache('DescriptionId ' + req.params.id, description)
+    }
 
     return res.status(200).json(description);
   } catch (e) {

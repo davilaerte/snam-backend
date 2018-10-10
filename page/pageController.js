@@ -8,6 +8,7 @@ const express = require('express');
 const pageRepository = require('./pageRepository');
 const notificationRepository = require('../notification/notificationRepository');
 const authMiddleware = require('../middlewares/authMiddleware');
+const cache = require('../cache');
 const router = express.Router();
 
 router.use(authMiddleware);
@@ -81,7 +82,12 @@ router.post('/:id/post', async (req, res) => {
  */
 router.get('/', async (req, res) => {
   try {
-    const pages = await pageRepository.findAll();
+    let pages = cache.getFromCache('Pages');
+
+    if (!pages) {
+      pages = await pageRepository.findAll();
+      cache.putInCache('Pages', pages, 10000);
+    }
 
     return res.status(200).json(pages);
   } catch (e) {
@@ -107,7 +113,14 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
   try {
-    const page = await pageRepository.findById(req.params.id);
+    let page = cache.getFromCache('PageId ' + req.params.id);
+
+    if (!page) {
+      page = await pageRepository.findById(req.params.id);
+
+      if (!page) return res.status(400).json({ error: 'Page nao existe' });
+      else cache.putInCache('PageId ' + req.params.id, page)
+    }
 
     return res.status(200).json(page);
   } catch (e) {
