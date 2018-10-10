@@ -19,4 +19,8 @@ userRepository.findAll = async () => {
   return await User.find({});
 };
 
+userRepository.dropAll = async () => {
+  return await User.collection.drop();
+};
+
 module.exports = userRepository;

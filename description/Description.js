@@ -13,7 +13,7 @@ const DescriptionSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  likes: {
+  like: {
     type: Number,
     default: 0
   },

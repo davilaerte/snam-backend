@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
   try {
     req.body.idUserAdm = userId;
 
-    const page = pageRepository.create(req.body);
+    const page = await pageRepository.create(req.body);
 
     await createPageNotification('Create', 'Created new page!', page.id, userId);
 

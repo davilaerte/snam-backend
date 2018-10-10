@@ -15,4 +15,8 @@ descriptionRepository.findAll = async () => {
   return await Description.find({});
 };
 
+descriptionRepository.dropAll = async () => {
+  return await Description.collection.drop();
+};
+
 module.exports = descriptionRepository;

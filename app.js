@@ -4,18 +4,12 @@
  */
 
 const express = require('express');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser')
-const morgan = require('morgan');
 const swagger = require('swagger-express');
-const cors = require('cors');
-const userRouter = require('./user/userController');
-const authRouter = require('./auth/authController');
-const pageRouter = require('./page/pageController');
-const descriptionRouter = require('./description/descriptionController');
-const notificationRouter = require('./notification/notificationController');
+const app = require('./appController');
+const mongoose = require('./database/index');
+const config = require('./_config');
 
-const app = express();
+const environment_bd = process.env.ENVIROMENT_BD || 'development';
 const port = process.env.PORT || 3000;
 const environment = process.env.ENVIROMENT || 'development';
 
@@ -23,11 +17,6 @@ if (environment !== 'production') {
   console.log('The system is not running in production!');
 }
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(cookieParser())
-app.use(morgan('dev'));
-app.use(cors());
 app.use(
   swagger.init(app, {
     apiVersion: '1.0',
@@ -42,13 +31,12 @@ app.use(
 
 app.use('/static', express.static('./static'));
 
-// Não modificar a ordem em que as rotas foram adicionadas, manter as rotas abertas primeiro (caso seja o mesmo recurso)
-app.use('/auth', authRouter);
-app.use('/user', userRouter.openRouter, userRouter.authRouter);
-app.use('/page', pageRouter);
-app.use('/description', descriptionRouter);
-app.use('/notification', notificationRouter);
-
-app.listen(port, () => console.log(`App listening on port ${port}!`));
+mongoose.connect(config.mongoURI[environment_bd], { useCreateIndex: true, useNewUrlParser: true }, (err) => {
+  if (!err) {
+    app.listen(port, () => console.log(`App listening on port ${port}!`));
+  } else {
+    console.log(err);
+  }
+});
 
 module.exports = app;

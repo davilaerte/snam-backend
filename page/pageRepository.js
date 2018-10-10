@@ -15,6 +15,10 @@ pageRepository.findAll = async () => {
   return await Page.find({});
 };
 
+pageRepository.dropAll = async () => {
+  return await Page.collection.drop();
+};
+
 pageRepository.createPost = async (idPage, idUser, data) => {
   const page = await pageRepository.findById(idPage);
 
