@@ -1,10 +1,25 @@
+/**
+ * @swagger
+ * resourcePath: /auth
+ * description: Provide resources to authenticate
+ */
 const express = require('express');
 const bcrypt = require('bcrypt');
 const util = require('../util/util');
 const User = require('../user/User');
 const router = express.Router();
 
-
+/**
+ * @swagger
+ * path: /
+ * operations:
+ *   -  httpMethod: POST
+ *      summary: Authenticate a user
+ *      notes: Returns a cookie with a token
+ *      nickname: authenticateUser
+ *      consumes: 
+ *        - apllication/json
+ */
 router.post('/', async (req, res) => {
   const { email, password } = req.body;
 

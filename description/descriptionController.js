@@ -1,3 +1,9 @@
+/**
+ * @swagger
+ * resourcePath: /description
+ * description: Provide resources about descriptions
+ */
+
 const express = require('express');
 const descriptionRepository = require('./descriptionRepository');
 const notificationRepository = require('../notification/notificationRepository');
@@ -6,6 +12,18 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
+/**
+ * @swagger
+ * path: /
+ * operations:
+ *   -  httpMethod: POST
+ *      summary: Create a new description
+ *      notes: Returns a new description
+ *      responseClass: Description
+ *      nickname: createDescription
+ *      consumes: 
+ *        - apllication/json
+ */
 router.post('/', async (req, res) => {
   const userId = req.userId;
 
@@ -22,6 +40,16 @@ router.post('/', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * path: /
+ * operations:
+ *   -  httpMethod: GET
+ *      summary: Get all descriptions
+ *      notes: Returns all descriptions
+ *      responseClass: Description
+ *      nickname: getDescriptions
+ */
 router.get('/', async (req, res) => {
   try {
     const descriptions = await descriptionRepository.findAll();
@@ -32,6 +60,22 @@ router.get('/', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * path: /:id
+ * operations:
+ *   -  httpMethod: GET
+ *      summary: Get a single description with id
+ *      notes: Returns a description
+ *      responseClass: Description
+ *      nickname: getSingleDescription
+ *      parameters:
+ *        - name: id
+ *          description: description id
+ *          paramType: query
+ *          required: true
+ *          dataType: string
+ */
 router.get('/:id', async (req, res) => {
   try {
     const description = await descriptionRepository.findById(req.params.id);

@@ -25,7 +25,7 @@ app.use(
     swaggerURL: '/docs/api',
     swaggerJSON: '/api-docs.json',
     swaggerUI: './public/swagger/',
-    apis: ['./user/userController.js']
+    apis: ['./user/userController.js', './page/pageController.js', './notification/notificationController.js', './description/descriptionController.js', './auth/authController.js']
   })
 );
 

@@ -1,7 +1,7 @@
 /**
  * @swagger
  * resourcePath: /user
- * description: All about API
+ * description: Provide resources about users
  */
 
 const express = require('express');
@@ -50,7 +50,7 @@ openRouter.post('/', async (req, res) => {
  * path: /
  * operations:
  *   -  httpMethod: GET
- *      summary: Get all users in system
+ *      summary: Get all users
  *      notes: Returns all users
  *      responseClass: User
  *      nickname: getUsers
