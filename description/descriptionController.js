@@ -26,8 +26,8 @@ authRouter.use(authMiddleware);
  *      consumes:
  *        - apllication/json
  */
-authRouter.post("/", async (req, res) => {
-  const userId = req.userId;
+openRouter.post("/user/:id", async (req, res) => {
+  const userId = req.params.id;
 
   try {
     req.body.idUserAdm = userId;
@@ -57,8 +57,8 @@ authRouter.post("/", async (req, res) => {
  *      responseClass: Description
  *      nickname: getUserDescriptions
  */
-authRouter.get("/", async (req, res) => {
-  const userId = req.userId;
+openRouter.get("/user/:id", async (req, res) => {
+  const userId = req.params.id;
 
   try {
     let descriptions = cache.getFromCache("DescriptionsUser-" + userId);

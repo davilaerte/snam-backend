@@ -1,10 +1,10 @@
-const util = require('../util/util');
+const util = require("../util/util");
 
 function autenticate(req, res, next) {
   const token = req.cookies[util.tokenName];
 
   if (!token) {
-    return res.status(401).json({ error: 'No token provider' });
+    return res.status(401).json({ error: "No token provider" });
   }
 
   try {
@@ -12,7 +12,7 @@ function autenticate(req, res, next) {
 
     return next();
   } catch (e) {
-    return res.status(401).json({ error: 'Token invalid' });
+    return res.status(401).json({ error: "Token invalid" });
   }
 }
 
