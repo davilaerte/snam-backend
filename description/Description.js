@@ -1,9 +1,14 @@
-const mongoose = require('../database/index');
+const mongoose = require("../database/index");
 
 const DescriptionSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true
+  },
+  img: {
+    type: String,
+    default:
+      "http://www.eltis.org/sites/default/files/default_images/photo_default_2.png"
   },
   text: {
     type: String,
@@ -23,6 +28,6 @@ const DescriptionSchema = new mongoose.Schema({
   }
 });
 
-const Description = mongoose.model('Description', DescriptionSchema);
+const Description = mongoose.model("Description", DescriptionSchema);
 
-module.exports = Description; 
+module.exports = Description;

@@ -4,11 +4,11 @@
  * description: Provide resources about pages
  */
 
-const express = require('express');
-const pageRepository = require('./pageRepository');
-const notificationRepository = require('../notification/notificationRepository');
-const authMiddleware = require('../middlewares/authMiddleware');
-const cache = require('../cache');
+const express = require("express");
+const pageRepository = require("./pageRepository");
+const notificationRepository = require("../notification/notificationRepository");
+const authMiddleware = require("../middlewares/authMiddleware");
+const cache = require("../cache");
 const router = express.Router();
 
 router.use(authMiddleware);
@@ -22,10 +22,10 @@ router.use(authMiddleware);
  *      notes: Returns a new page
  *      responseClass: Page
  *      nickname: createPage
- *      consumes: 
+ *      consumes:
  *        - apllication/json
  */
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   const userId = req.userId;
 
   try {
@@ -33,11 +33,16 @@ router.post('/', async (req, res) => {
 
     const page = await pageRepository.create(req.body);
 
-    await createPageNotification('Create', 'Created new page!', page.id, userId);
+    await createPageNotification(
+      "Create",
+      "Created new page!",
+      page.id,
+      userId
+    );
 
     return res.status(201).json(page);
   } catch (e) {
-    return res.status(400).json({ error: 'Failed: ' + e });
+    return res.status(400).json({ error: "Failed: " + e });
   }
 });
 
@@ -56,17 +61,26 @@ router.post('/', async (req, res) => {
  *          paramType: query
  *          required: true
  *          dataType: string
- *      consumes: 
+ *      consumes:
  *        - apllication/json
  */
-router.post('/:id/post', async (req, res) => {
+router.post("/:id/post", async (req, res) => {
   try {
-    const updatedPage = await pageRepository.createPost(req.params.id, req.userId, req.body);
-    await createPageNotification('Create', 'Created new page post!', updatedPage.id, req.userId);
+    const updatedPage = await pageRepository.createPost(
+      req.params.id,
+      req.userId,
+      req.body
+    );
+    await createPageNotification(
+      "Create",
+      "Created new page post!",
+      updatedPage.id,
+      req.userId
+    );
 
     return res.status(201).json(updatedPage);
   } catch (e) {
-    return res.status(400).json({ error: 'Failed: ' + e });
+    return res.status(400).json({ error: "Failed: " + e });
   }
 });
 
@@ -80,18 +94,18 @@ router.post('/:id/post', async (req, res) => {
  *      responseClass: Page
  *      nickname: getPages
  */
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    let pages = cache.getFromCache('Pages');
+    let pages = cache.getFromCache("Pages");
 
     if (!pages) {
       pages = await pageRepository.findAll();
-      cache.putInCache('Pages', pages, 10000);
+      cache.putInCache("Pages", pages, 10000);
     }
 
     return res.status(200).json(pages);
   } catch (e) {
-    return res.status(400).json({ error: 'Failed: ' + e });
+    return res.status(400).json({ error: "Failed: " + e });
   }
 });
 
@@ -111,25 +125,31 @@ router.get('/', async (req, res) => {
  *          required: true
  *          dataType: string
  */
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    let page = cache.getFromCache('PageId ' + req.params.id);
+    let page = cache.getFromCache("PageId " + req.params.id);
 
     if (!page) {
       page = await pageRepository.findById(req.params.id);
 
-      if (!page) return res.status(400).json({ error: 'Page nao existe' });
-      else cache.putInCache('PageId ' + req.params.id, page)
+      if (!page) return res.status(400).json({ error: "Page nao existe" });
+      else cache.putInCache("PageId " + req.params.id, page);
     }
 
     return res.status(200).json(page);
   } catch (e) {
-    return res.status(400).json({ error: 'Failed: ' + e });
+    return res.status(400).json({ error: "Failed: " + e });
   }
 });
 
 function createPageNotification(type, text, resource, userId) {
-  return notificationRepository.create(type, 'Page', text, '/page/' + resource, userId);
+  return notificationRepository.create(
+    type,
+    "Page",
+    text,
+    "/page/" + resource,
+    userId
+  );
 }
 
 module.exports = router;
