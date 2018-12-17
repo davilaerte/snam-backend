@@ -11,4 +11,5 @@ npm start
 ```
 npm test
 ```
+Agora seu server vai estar funcionando em: http://localhost:3001/
 
