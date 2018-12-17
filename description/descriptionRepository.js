@@ -11,6 +11,10 @@ descriptionRepository.findById = async id => {
   return await Description.findById(id);
 };
 
+descriptionRepository.findByNameDescription = async (nameDescription) => {
+  return await Description.find({ title: new RegExp(nameDescription, "i") });
+};
+
 descriptionRepository.findByidUserAdm = async id => {
   return await Description.find({ idUserAdm: id });
 };

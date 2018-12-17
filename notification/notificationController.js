@@ -25,7 +25,7 @@ router.use(authMiddleware);
 router.get('/', async (req, res) => {
   try {
     let notifications = cache.getFromCache('Notifications ' + req.userId);
-    console.log(notifications);
+
     if (!notifications) {
       notifications = await notificationRepository.findByUserId(req.userId);
       cache.putInCache('Notifications ' + req.userId, notifications, 10000);

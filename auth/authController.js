@@ -33,9 +33,7 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Invalid password' });
   }
 
-  res.cookie('access_token', util.generateToken({ id: user.id }));
-
-  return res.status(201).end();
+  return res.status(201).send({ token: util.generateToken({ id: user.id }) });
 });
 
 module.exports = router;

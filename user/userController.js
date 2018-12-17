@@ -38,8 +38,6 @@ openRouter.post('/', async (req, res) => {
 
     user.password = undefined;
 
-    res.cookie(util.tokenName, util.generateToken({ id: user.id }));
-
     return res.status(201).json(user);
   } catch (e) {
     return res.status(400).json({ error: 'Registration failed ' + e });
@@ -48,7 +46,7 @@ openRouter.post('/', async (req, res) => {
 
 /**
  * @swagger
- * path: /
+ * path: /all
  * operations:
  *   -  httpMethod: GET
  *      summary: Get all users
@@ -56,7 +54,7 @@ openRouter.post('/', async (req, res) => {
  *      responseClass: User
  *      nickname: getUsers
  */
-authRouter.get('/', async (req, res) => {
+authRouter.get('/all', async (req, res) => {
   try {
     let users = cache.getFromCache('Users');
 
@@ -96,6 +94,41 @@ authRouter.get('/:id', async (req, res) => {
 
       if (!user) return res.status(400).json({ error: 'Usuario nao cadastrado' });
       else cache.putInCache('UserId ' + req.params.id, user)
+    }
+
+    return res.status(200).json(user);
+  } catch (e) {
+    return res.status(400).json({ error: 'Falha com erro: ' + e });
+  }
+});
+
+/**
+ * @swagger
+ * path: /
+ * operations:
+ *   -  httpMethod: GET
+ *      summary: Get a auth user
+ *      notes: Returns a user
+ *      responseClass: User
+ *      nickname: getAuthUser
+ *      parameters:
+ *        - name: id
+ *          description: user id
+ *          paramType: query
+ *          required: true
+ *          dataType: string
+ */
+authRouter.get('/', async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    let user = cache.getFromCache('UserId ' + userId);
+
+    if (!user) {
+      user = await userRepository.findById(userId);
+
+      if (!user) return res.status(400).json({ error: 'Usuario nao cadastrado' });
+      else cache.putInCache('UserId ' + userId, user)
     }
 
     return res.status(200).json(user);

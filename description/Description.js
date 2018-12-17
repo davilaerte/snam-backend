@@ -22,6 +22,16 @@ const DescriptionSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  idsUsersLikes: {
+    type: [String],
+    required: false,
+    default: []
+  },
+  hasUserLike: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
   createAt: {
     type: Date,
     default: Date.now

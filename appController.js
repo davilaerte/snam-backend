@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const userRouter = require("./user/userController");
@@ -13,7 +12,6 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(cors());
 
@@ -24,7 +22,6 @@ app.use("/user", userRouter.openRouter, userRouter.authRouter);
 app.use("/page", pageRouter);
 app.use(
   "/description",
-  descriptionRouter.openRouter,
   descriptionRouter.authRouter
 );
 app.use("/notification", notificationRouter);
